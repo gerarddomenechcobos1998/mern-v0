@@ -1,18 +1,31 @@
 version: '3.3'
 
 services:
-    mongo:
-        image: mongo:latest
-        container_name: mongo
-        ports:
-          - '27017:27017'
-        volumes:
-          - './data/mongo:/data/db'
+    
+  backend:
+      environment:
+        NODE_ENV: production
+      build:
+        context: ./backend/
+      container_name: backend
+      ports:
+        - '3000:3000'
+      depends_on: 
+        - mongo
+      volumes:
+        - './backend:/app'
+  mongo:
+      image: mongo:latest
+      container_name: mongo
+      ports:
+        - '27017:27017'
+      volumes:
+        - './data/mongo:/data/db'
 
-    mongo-express:
-        image: mongo-express:latest
-        container_name: mongo-express
-        depends_on: 
-            - mongo 
-        ports:
-            - '8081:8081'
+  mongo-express:
+      image: mongo-express:latest
+      container_name: mongo-express
+      depends_on: 
+          - mongo 
+      ports:
+          - '8081:8081'
